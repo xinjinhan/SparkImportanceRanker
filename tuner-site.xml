@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<configuration>
+<!-- Site specific SparkTuner configuration properties -->
+  <property>
+    <name>tuner.root.directory</name>
+    <value></value>
+    <description>
+      Root directory of SparkTuner.
+      (default: location of EnvironmentParser.py)
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.yarn.resourcemanager.webapp.address</name>
+    <value></value>
+    <description>
+      The webApp address of yarn resourcemanager.
+      (default: "yarn.resourcemanager.webapp.address")
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.application.jar.mainClass</name>
+    <value>SparkTunerTest.TpcdsTest10CV</value>
+    <description>
+      The main class of client's business application jar.
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.application.jar.location</name>
+    <value>/root/SparkTunerEnv/jars/simplifiedTpcds.jar</value>
+    <description>
+      The location of client's business application jar.
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.sample.scale</name>
+    <value></value>
+    <description>
+      The number of samples in the training set.
+      (default: 200)
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.application.name</name>
+    <value>SparkTunerApp</value>
+    <description>
+      The client's application name.
+      (default: SparkTunerApp)
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.scheduler.numWorkers</name>
+    <value></value>
+    <description>
+      The number of worker nodes.
+      (default: num of yarn slaves)
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.scheduler.maximum-allocation-mb</name>
+    <value></value>
+    <description>
+      The maximum memory that can be allocated to a single executor.
+      (default: value of "yarn.scheduler.maximum-allocation-mb")
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.scheduler.minimum-allocation-mb</name>
+    <value></value>
+    <description>
+      The minimum memory that should be allocated to a single executor.
+      (default: value of "yarn.scheduler.minimum-allocation-mb")
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.scheduler.maximum-allocation-vcores</name>
+    <value></value>
+    <description>
+      The maximum cpu cores that can be allocated to a single executor.
+      (default: value of "yarn.scheduler.maximum-allocation-vcores")
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.scheduler.minimum-allocation-vcores</name>
+    <value></value>
+    <description>
+      The minimum cpu cores that should be allocated to a single executor.
+      (default: value of "yarn.scheduler.maximum-allocation-vcores")
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.node.available.memory</name>
+    <value></value>
+    <description>
+      The maximum available memory of a single worker node.
+      (default: value of "yarn.nodemanager.resource.memory-mb")
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.node.available.vcores</name>
+    <value></value>
+    <description>
+      The maximum available cpu cores of a single worker node.
+      (default: value of "yarn.nodemanager.resource.cpu-vcores")
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.iteration.num</name>
+    <value>60</value>
+    <description>
+      The number of the search iterations.(default: 60)
+    </description>
+  </property>
+    
+  <property>
+    <name>tuner.enable.sparkStreamingTuner</name>
+    <value></value>
+    <description>
+      Whether to enable SparkStreamingTuning. Only support for Hibench-SparkStreamingTests now.
+      (default: False)
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.enable.defaltConfiguration</name>
+    <value></value>
+    <description>
+      Whether to use the official default parameters to run the application.
+      (default: False)
+    </description>
+  </property>
+
+  <property>
+    <name>tuner.skip.dataCollection</name>
+    <value></value>
+    <description>
+      Whether to skip sampling data collection.
+      (default: False)
+    </description>
+  </property>
+</configuration>

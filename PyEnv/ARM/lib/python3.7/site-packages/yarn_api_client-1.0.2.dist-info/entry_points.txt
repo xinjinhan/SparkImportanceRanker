@@ -1,0 +1,3 @@
+[console_scripts]
+yarn_client = yarn_api_client.main:main
+
