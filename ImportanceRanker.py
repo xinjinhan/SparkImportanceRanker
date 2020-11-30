@@ -14,12 +14,7 @@ import csv
 
 enableStreaming = envParser.enableSparkStreamingTuner
 sparkTunerWarehouse = envParser.sparkTunerWarehouse
-
-if enableStreaming:
-    configNum = 45
-else:
-    configNum = 38
-
+configNum = envParser.getConfigOrFeatureNum()
 
 class Train_CV_SGBRT(object):
 
