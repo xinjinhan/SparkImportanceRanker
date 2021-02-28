@@ -22,6 +22,7 @@ startTime = ""
 applicationJarLocation = ""
 applicationJarMainClass = ""
 
+architecture = envParser.architecture
 applicationName = envParser.appName
 sparkHome = envParser.sparkHome
 hibenchHome = envParser.hibenchHome
@@ -927,20 +928,20 @@ def buildModel():
 
     # Data preprocessing
     if enableSparkStreaming:
-        processDataCommand = "python3 " + str(envParser.currentWorkPath) + "/DataProcessor.py"
+        processDataCommand = str(sparkTunerHome) + "/PyEnv/" + str(architecture) + "/bin/python3 " + str(sparkTunerHome) + "/DataProcessor.py"
     else:
-        processDataCommand = "python3 " + str(envParser.currentWorkPath) + "/DataProcessor.py"
+        processDataCommand = str(sparkTunerHome) + "/PyEnv/" + str(architecture) + "/bin/python3 " + str(sparkTunerHome) + "/DataProcessor.py"
     os.system(processDataCommand)
 
     # if enableSparkStreaming:
-    #     os.system("python3 " + str(sparkTunerHome) + "/GaAutoSearching.py")
+    #     os.system(str(sparkTunerHome) + "/PyEnv/" + str(architecture) + "/bin/python3 " + str(sparkTunerHome) + "/GaAutoSearching.py")
     # else:
-    #     os.system("python3 " + str(sparkTunerHome) + "/GaAutoSearching.py")
+    #     os.system(str(sparkTunerHome) + "/PyEnv/" + str(architecture) + "/bin/python3 " + str(sparkTunerHome) + "/GaAutoSearching.py")
 
     print("==================================================" + "\n"
           + "       Generating Importance Ranking Report       " + "\n"
           + "--------------------------------------------------" + "\n")
-    os.system("python3 " + str(sparkTunerHome) + "/ImportanceRanker.py")
+    os.system(str(sparkTunerHome) + "/PyEnv/" + str(architecture) + "/bin/python3 " + str(sparkTunerHome) + "/ImportanceRanker.py")
     print("--------------------------------------------------" + "\n"
           + "           Importance Ranking Report Got" + "\n"
           + "==================================================" + "\n")

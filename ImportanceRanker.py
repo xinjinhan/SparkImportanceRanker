@@ -2,7 +2,7 @@
 # -*- coding:utf-8 _*-
 
 from __future__ import print_function
-
+import time
 import os
 import numpy as np
 import pandas as pd
@@ -36,7 +36,7 @@ class Train_CV_SGBRT(object):
         y = data.iloc[1:, configNum]
 
         # Iteration times
-        Itera = 24
+        Itera = 10
 
         events_name = X.columns
 
@@ -124,7 +124,7 @@ class Train_CV_SGBRT(object):
             """ Event Importance Refinement (EIR) """
             print("---------- the " + str(_) + "th training ----------")
             assert len(X) == len(y)
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
             forest = cv_estimate(X_train, y_train)
             forest = forest.fit(X_train, y_train)
 
@@ -167,9 +167,9 @@ class Train_CV_SGBRT(object):
             Importances.append(importanceS)
 
             if _ < Itera - 1:
-                """ Deleting the least important 10 events in each Iteration 206 """
+                """ Deleting the least important 2 events in each Iteration 206 """
                 X = pd.DataFrame(X)
-                X[X.columns[indices[-10 * (_ + 1):]]] = 0
+                X[X.columns[indices[-2 * (_ + 1):]]] = 0
                 # X = np.array(X)
             print(' Error: ', err * 100, '%')
         sparktunerRecord.close()
@@ -205,6 +205,9 @@ class Train_CV_SGBRT(object):
 
 
 if __name__ == '__main__':
+    start=time.time()
     train_cv_sgbrt = Train_CV_SGBRT()
     train_cv_sgbrt.__init__()
     train_cv_sgbrt.build()
+    end=time.time()
+    print("model cost time: "+str(end-start)+" s")

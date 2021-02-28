@@ -6,6 +6,7 @@ import os
 import getpass
 import socket
 import sys
+import platform
 
 from xml.etree import ElementTree as elementTree
 from numpy.core.defchararray import isdigit
@@ -19,6 +20,11 @@ if not os.path.exists(sparkTunerWarehouse):
     sparkTunerWarehouse = sys.path[0]
     print("SPARKTUNER_WAREHOUSE == invalid, set it to the root directory of SparkTuner")
 currentWorkPath = os.getcwd()
+architecture = "ARM"
+if "aarch" in platform.platform():
+    architecture = "ARM"
+elif "X86" in platform.platform() or "x86" in platform.platform():
+    architecture = "X86"
 
 
 def getYarnConfig(configName, hadoophome=hadoopHome):
@@ -272,7 +278,7 @@ def parseConfigurationXml(configName):
             if isdigit(property['value']) or property['value'] in ['True', 'true', 'False', 'false']:
                 return property['value']
             if property['name'] in ['tuner.application.jar.location', 'tuner.application.jar.mainClass',
-                                    'tuner.yarn.resourcemanager.webapp.address']:
+                                    'tuner.yarn.resourcemanager.webapp.address', 'tuner.application.name']:
                 return property['value']
             return sparkTunerConfigsDefaultValue[configName]
     return sparkTunerConfigsDefaultValue[configName]
