@@ -740,8 +740,7 @@ def runBaBench():
     timer.cancel()
     babenchReport = open(str(babenchHome) + "/reports/bigbench.report", "r")
     latestReport = babenchReport.readlines()[-1]
-    if result == 0 and ApplicationController.verifyApplicationStatus(yarnApplicationId,
-                                                                     "SUCCEEDED") and "Succeed" in latestReport:
+    if result == 0 and "Succeed" in latestReport:
         if yarnApplicationId != "":
             duration = latestReport.split("  ")[6]
     else:
