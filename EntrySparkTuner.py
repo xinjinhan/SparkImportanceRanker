@@ -26,6 +26,7 @@ architecture = envParser.architecture
 applicationName = envParser.appName
 sparkHome = envParser.sparkHome
 hibenchHome = envParser.hibenchHome
+babenchHome = envParser.babenchHome
 sparkTunerWarehouse = envParser.sparkTunerWarehouse
 sparkTunerHome = envParser.sparkTunerHome
 hdfsAddress = envParser.getHdfsAddress()
@@ -715,6 +716,39 @@ def preData(benchmarks, enableSparkStreaming):
     return True
 
 
+def runBaBench():
+    global timeVec, duration, applicationExecutionTime, yarnApplicationId, upperBoundTime, currentFailureTimes, failedApplicationId
+
+    dataFormat = "parquet"
+    queries = "q72"
+    dataScale = 100
+
+    timer = threading.Timer(upperBoundTime, ApplicationController.killApplicationsByApplicationName)
+    getId = ApplicationController.getRunningApplicationIdThread()
+    getApplicationIdThread = threading.Thread(target=getId.getApplicationId)
+    timer.start()
+    getApplicationIdThread.start()
+
+    print("\n Application == running...")
+    result = ApplicationController.runBabench(dataFormat, queries, dataScale)
+
+    yarnApplicationId = getId.applicationId
+    print("reasult ==  ")
+    print(result)
+    print(str(yarnApplicationId))
+    getId.terminate()
+    timer.cancel()
+    babenchReport = open(str(babenchHome) + "/reports/bigbench.report", "r")
+    latestReport = babenchReport.readlines()[-1]
+    if result == 0 and ApplicationController.verifyApplicationStatus(yarnApplicationId,
+                                                                     "SUCCEEDED") and "Succeed" in latestReport:
+        if yarnApplicationId != "":
+            duration = latestReport.split("  ")[6]
+    else:
+        result = 1
+    return result
+
+
 def runApplication(location, mainClass):
     global timeVec, duration, applicationExecutionTime, yarnApplicationId, upperBoundTime, currentFailureTimes, failedApplicationId
     timer = threading.Timer(upperBoundTime, ApplicationController.killApplicationsByApplicationName)
@@ -1126,26 +1160,26 @@ def main():
                     makeApplicationResult(numOfSuc, hibenchSuccessfulApplicationHeaders)
     else:
         envParser.sparkDefaultsConfParser()
-        applicationJarLocation = envParser.applicationJarLoc
-        applicationJarMainClass = envParser.applicationJarMainClass
-
-        if applicationJarLocation is None:
-            print("You have not set Jar Location in tuner-site.xml!\n"
-                  "Please input application(jar file)'s location now:")
-            applicationJarLocation = input()
-        while not os.path.exists(applicationJarLocation):
-            print("Jar location " + applicationJarLocation + " specified in tuner-site.xml not exists,\n"
-                                                             "please correct or input the right path:")
-            applicationJarLocation = input()
-
-        if applicationJarMainClass is None:
-            print("You have not set Jar main class in tuner-site.xml!\n"
-                  "Please input your main class now:")
-            applicationJarMainClass = input()
-
-        print("\nThe application's logs will be saved to hdfs path\n"
-              + "(sparkTuner start sparkEventLog by default):\n"
-              + str(hdfsAddress) + "/sparktunerLogs\n")
+        # applicationJarLocation = envParser.applicationJarLoc
+        # applicationJarMainClass = envParser.applicationJarMainClass
+        #
+        # if applicationJarLocation is None:
+        #     print("You have not set Jar Location in tuner-site.xml!\n"
+        #           "Please input application(jar file)'s location now:")
+        #     applicationJarLocation = input()
+        # while not os.path.exists(applicationJarLocation):
+        #     print("Jar location " + applicationJarLocation + " specified in tuner-site.xml not exists,\n"
+        #                                                      "please correct or input the right path:")
+        #     applicationJarLocation = input()
+        #
+        # if applicationJarMainClass is None:
+        #     print("You have not set Jar main class in tuner-site.xml!\n"
+        #           "Please input your main class now:")
+        #     applicationJarMainClass = input()
+        #
+        # print("\nThe application's logs will be saved to hdfs path\n"
+        #       + "(sparkTuner start sparkEventLog by default):\n"
+        #       + str(hdfsAddress) + "/sparktunerLogs\n")
 
         totalTestTimes = envParser.sampleScale
         startTime = time.strftime("%m%d-%H:%M", time.localtime())
@@ -1154,7 +1188,9 @@ def main():
             print("Succeed: " + str(numOfSuc))
             print("Failed: " + str(numOfFail))
             configVec = makeConfig(enableSparkStreaming)  # make config
-            res = runApplication(applicationJarLocation, applicationJarMainClass)
+            cacheClearCmd = "bash " + str(sparkTunerHome) + "/ClearCacheAndBuffer.sh"
+            os.system(cacheClearCmd)
+            res = runBaBench()
             if res == 0:
                 numOfSuc += 1
                 with open(str(sparkTunerWarehouse) + "/SparkTunerReports/confVec.csv", "a") as configVecFile:

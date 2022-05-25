@@ -16,6 +16,7 @@ sparkHome = os.environ.get('SPARK_HOME')
 hadoopHome = os.environ.get('HADOOP_HOME')
 hibenchHome = os.environ.get('HIBENCH_HOME')
 sparkTunerWarehouse = os.environ.get("SPARKTUNER_WAREHOUSE")
+babenchHome = os.environ.get("BABENCH_HOME")
 if not os.path.exists(sparkTunerWarehouse):
     sparkTunerWarehouse = sys.path[0]
     print("SPARKTUNER_WAREHOUSE == invalid, set it to the root directory of SparkTuner")

@@ -13,6 +13,8 @@ userName = envParser.getUsername()
 sparkTunerWarehouse = envParser.sparkTunerWarehouse
 hibenchHome = envParser.hibenchHome
 benchmarkName = ""
+babenchHome = envParser.babenchHome
+
 
 def enableSparkStreaming():
     print("Need to optimize SparkStreaming? Please input yes or no:")
@@ -32,6 +34,13 @@ def getApplicationName():
     return applicationName
 
 applicationName = getApplicationName()
+
+def runBabench(dataFormat, queries, dataScale, propertiesFile = ""):
+    if propertiesFile == "":
+        propertiesFile = str(sparkTunerWarehouse) + "/SparkTunerReports/tmp/sparktunerConfig.conf"
+    command = "bash " + str(babenchHome) + "/bin/TestSparkWithTpcds.sh " + str(dataFormat) + " " + str(dataScale) + " " + str(queries) + " " + str(propertiesFile)
+    result = os.system(command)
+    return result
 
 def submitApplicationOnYarn(sparkHome, location, mainClass, propertiesFile = "", applicationName = applicationName):
     if propertiesFile == "":
